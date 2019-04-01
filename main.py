@@ -10,26 +10,26 @@ form =  """
             <html>
                 <head>
                     <style>
-                        form {
+                        form {{
                             background-color: #eee;
                             padding: 20px;
                             margin: 0 auto;
                             width: 540px;
                             font: 16px sans-serif;
                             border-radius: 10px;
-                        }
-                        textarea {
+                        }}
+                        textarea {{
                             margin: 10px 0;
                             width: 540px;
                             height:120px;
-                        }
+                        }}
                     </style>
                 </head>
                 <body>
-                    <form action="/rotate" method="post">
+                    <form action="/" method="post">
                         <label for="Rotate by">Rotate by</label>
                         <input type="text" name="rot" value="0"/>
-                        <textarea name="text"></textarea>
+                        <textarea name="text">{0}</textarea>
                         <input type="submit" value="Submit Query"
                         </label>
                     </form>
@@ -41,16 +41,18 @@ form =  """
 
 @app.route("/")
 def index():
-    return form
+    return form.format("")
 
-#TODO: encrypt the value of the text parameter using rotate_string
-#TODO: return the encrypted string wrapped in <h1> tags to be rendered in the browser
+#encrypts the value of the text parameter using rotate_string
+#return the encrypted string to be rendered in the browser
 @app.route("/", methods=['POST'])
 def encrypt():
-    rot = request.form['rot']
-    text= request.form['text']
-    encrypted_text = "<h1>" + rotate_string(text, rot) + "</h1>"
-    return encrypted_text
+    rot = int(request.form['rot'])
+    text= str(request.form['text'])
+    #encrypted_text = "<h1>" + rotate_string(text, rot) + "</h1>"
+    encrypted_text = rotate_string(text,rot)
+    return form.format(encrypted_text)
+
 
 
 app.run()
